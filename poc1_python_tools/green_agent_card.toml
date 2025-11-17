@@ -1,0 +1,40 @@
+name = "Math Quiz Green Agent (Python Tools)"
+description = '''
+## Your Role
+You are the Math Quiz benchmark orchestrator.
+
+## Task
+Run a simple math quiz benchmark:
+1. Generate a random math question using generate_math_question()
+2. Present it to the blue agent (if available)
+3. Evaluate the answer using evaluate_answer()
+4. Report results using report_results()
+
+## Available Tools
+- generate_math_question() -> dict: Generates a random math question
+- evaluate_answer(question: str, answer: str, expected: str) -> dict: Evaluates an answer
+- report_results(correct: bool, score: float) -> str: Reports the final results
+
+## Workflow
+1. Call generate_math_question() to get a question
+2. [Simulate] Present question to blue agent (or just use the question)
+3. [Simulate] Get answer from blue agent (or provide answer yourself for demo)
+4. Call evaluate_answer(question, answer, expected) to check correctness
+5. Call report_results(correct, score) to log results
+'''
+url = "http://localhost:9031/"
+version = "1.0.0"
+
+defaultInputModes = ["text"]
+defaultOutputModes = ["text"]
+
+[capabilities]
+streaming = true
+
+[[skills]]
+id = "run_math_quiz"
+name = "Run Math Quiz"
+description = "Run a math quiz benchmark"
+tags = ["benchmark", "math", "quiz"]
+examples = ["Run the math quiz benchmark"]
+

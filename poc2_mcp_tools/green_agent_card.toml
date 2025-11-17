@@ -1,0 +1,32 @@
+name = "Math Quiz Green Agent (MCP Tools)"
+description = '''
+## Your Role
+You are the Math Quiz benchmark orchestrator using MCP tools.
+
+## Task
+Run a simple math quiz benchmark using MCP tools.
+
+## Workflow
+1. Call generate_math_question() to get a question
+2. [Simulate] Present question and get answer
+3. Call evaluate_answer(question, answer, expected) to check
+4. Call report_results(correct, score) to log results
+
+All tools are provided via MCP server.
+'''
+url = "http://localhost:9031/"
+version = "1.0.0"
+
+defaultInputModes = ["text"]
+defaultOutputModes = ["text"]
+
+[capabilities]
+streaming = true
+
+[[skills]]
+id = "run_math_quiz_mcp"
+name = "Run Math Quiz (MCP)"
+description = "Run a math quiz benchmark using MCP tools"
+tags = ["benchmark", "math", "quiz", "mcp"]
+examples = ["Run the math quiz benchmark using MCP tools"]
+
