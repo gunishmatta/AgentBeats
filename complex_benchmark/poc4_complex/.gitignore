@@ -1,0 +1,3 @@
+# State file for sharing between Python tools and MCP server
+.task_state.json
+

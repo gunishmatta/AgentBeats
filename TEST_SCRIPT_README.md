@@ -1,6 +1,6 @@
 # PoC Test Script - Usage Guide
 
-This directory contains scripts to run actual tests on PoC 1, PoC 2, and PoC 4 to collect real metrics.
+This directory contains scripts to run actual tests.
 
 ## Quick Start
 

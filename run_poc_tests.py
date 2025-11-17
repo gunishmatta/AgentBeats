@@ -383,6 +383,36 @@ class POC2Runner(POCRunner):
         """Get test query for PoC 2"""
         return "Run the math quiz benchmark using MCP tools. Generate a question, evaluate an answer, and report the results."
 
+class POC3Runner(POCRunner):
+    """Runner for PoC 3: Text Descriptions Only"""
+    
+    def __init__(self):
+        super().__init__("PoC 3: Text Descriptions", 9050, 9039)
+        self.base_path = Path(__file__).parent / "poc3_text_only"
+    
+    def setup(self) -> bool:
+        """Setup PoC 3"""
+        card_path = str(self.base_path / "green_agent_card.toml")
+        return self.start_agent(card_path)
+    
+    def get_test_query(self) -> str:
+        """Get test query for PoC 3"""
+        return """Run the math quiz benchmark using text descriptions only.
+
+Follow the instructions in your agent card to:
+1. Generate a math question
+2. Calculate the correct answer
+3. Simulate the blue agent's response
+4. Evaluate the answer
+5. Report the final results
+
+Remember: You don't have callable tools, but you must simulate the entire workflow."""
+    
+    def get_expected_tools(self) -> List[str]:
+        # Text-only has no tools, but we look for workflow indicators
+        return ["generate", "evaluate", "report"]
+
+
 class POC4Runner(POCRunner):
     """Runner for PoC 4: Hybrid Approach"""
     
@@ -402,11 +432,36 @@ class POC4Runner(POCRunner):
     def get_test_query(self) -> str:
         """Get test query for PoC 4"""
         return "Run the math quiz benchmark using the hybrid approach. Follow the workflow steps: generate a question, evaluate an answer, and report the results."
+    
+    def get_expected_tools(self) -> List[str]:
+        return ["generate_math_question", "evaluate_answer", "report_results"]
 
 def analyze_response(response_text: str, expected_tools: List[str], detected_tools: Optional[List[str]] = None) -> Tuple[List[str], bool]:
     """Analyze response to extract tool calls made"""
     tool_calls = detected_tools or []
     response_lower = response_text.lower()
+    
+    # Special handling for text-only approach (generate, evaluate, report)
+    if "generate" in expected_tools:
+        if any(indicator in response_lower for indicator in [
+            "generate", "question:", "what is", "calculate"
+        ]):
+            if "generate" not in tool_calls:
+                tool_calls.append("generate")
+    
+    if "evaluate" in expected_tools:
+        if any(indicator in response_lower for indicator in [
+            "evaluate", "evaluation", "correct", "incorrect", "score:"
+        ]):
+            if "evaluate" not in tool_calls:
+                tool_calls.append("evaluate")
+    
+    if "report" in expected_tools:
+        if any(indicator in response_lower for indicator in [
+            "report", "results", "final", "status:"
+        ]):
+            if "report" not in tool_calls:
+                tool_calls.append("report")
     
     # First, use detected tools from streaming response if available
     if detected_tools:
@@ -631,8 +686,8 @@ def main():
     parser.add_argument("--runs", type=int, default=5, help="Number of test runs per PoC")
     parser.add_argument("--model", type=str, default="gpt-4o-mini", help="Model to use")
     parser.add_argument("--output", type=str, default="poc_test_results.json", help="Output file")
-    parser.add_argument("--poc", type=str, choices=["1", "2", "4", "all"], default="all", 
-                       help="Which PoC to test (1, 2, 4, or all)")
+    parser.add_argument("--poc", type=str, choices=["1", "2", "3", "4", "all"], default="all", 
+                       help="Which PoC to test (1, 2, 3, 4, or all)")
     
     args = parser.parse_args()
     
@@ -665,6 +720,8 @@ def main():
         runners.append(POC1Runner())
     if args.poc in ["2", "all"]:
         runners.append(POC2Runner())
+    if args.poc in ["3", "all"]:
+        runners.append(POC3Runner())
     if args.poc in ["4", "all"]:
         runners.append(POC4Runner())
     

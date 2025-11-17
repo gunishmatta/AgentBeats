@@ -1,0 +1,3 @@
+⚠️  Warning: a2a library not found. Install with: pip install a2a httpx
+❌ ERROR: a2a library is required but not installed
+   Please install with: pip install a2a httpx

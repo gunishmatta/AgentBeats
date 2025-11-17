@@ -1,0 +1,4 @@
+usage: run_poc_tests.py [-h] [--runs RUNS] [--model MODEL] [--output OUTPUT]
+                        [--poc {1,2,4,all}]
+run_poc_tests.py: error: argument --poc: invalid choice: '3' (choose from '1', '2', '4', 'all')
+⚠️  Warning: a2a library not found. Install with: pip install a2a httpx
